@@ -26,7 +26,7 @@ the last location, (15,21), in this test. These are separate assertions.
 The runtime-only setting `CharSaveinterval=1` shortens the existing autosave
 interval; the server still polls it on its ordinary roughly 11-second cadence.
 No gameplay source code is modified by this test. Account `life_fixture`, password
-`fixture-password`, and protocol marker `BASELINE` are PUBLIC disposable test
+`demo-pass`, and protocol marker `BASELINE` are PUBLIC disposable test
 fixtures, not credentials for any real service.
 
 ## Run
@@ -79,3 +79,5 @@ recovery, the Windows client, a browser UI, production security, or stability ov
 long sessions. Legacy compiler warnings remain. In particular, the P1 status
 formatter has an extra integer placeholder without an argument; the test checks
 only the documented fields and records this unresolved compatibility issue.
+
+Updated P1 layout and login-capacity/logging checks are documented in [STATUS-CONTRACT.md](STATUS-CONTRACT.md). The committed historical evidence predates these fixes; use a fresh run for current evidence.

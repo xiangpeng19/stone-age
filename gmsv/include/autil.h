@@ -50,6 +50,7 @@ void util_shlstring(char *dst, char *src, int offs);
 int util_deint(int sliceno, int *value);
 int util_mkint(char *buffer, int value);
 int util_destring(int sliceno, char *value);
+int util_destring_bounded(int sliceno, char *value, int capacity);
 int util_mkstring(char *buffer, char *value);
 
 #endif

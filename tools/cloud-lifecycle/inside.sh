@@ -28,6 +28,7 @@ sleep 10
 kill -0 "$gpid"
 cat /proc/net/tcp > /logs/runtime-tcp.txt
 python3 /test/lifecycle.py
+python3 /test/verify_logs.py
 kill -0 "$gpid"
 kill -0 "$apid"
 kill -0 "$dbpid"

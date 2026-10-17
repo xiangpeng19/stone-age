@@ -9,9 +9,7 @@ import time
 import traceback
 from protocol import encode_packet, decode_packet
 
-ACCOUNT = b'life_fixture'
-PASSWORD = b'fixture-password'
-NAME = b'LifeFixture'
+from fixtures import ACCOUNT, PASSWORD, WRONG_PASSWORD, NAME
 KEY = ACCOUNT + b'BASELINE'
 LOGS = Path('/logs')
 EVENTS = []
@@ -45,7 +43,7 @@ class Client:
 
     def send(self, opcode, fields, login=False):
         packet = encode_packet(opcode, fields, b'BASELINE' if login else KEY)
-        WIRE.write(json.dumps({'direction': 'client', 'opcode': opcode, 'fields': [text(x) for x in fields], 'wire_hex': packet.hex()})+'\n')
+        WIRE.write(json.dumps({'direction': 'client', 'opcode': opcode, 'redacted': True} if login else {'direction': 'client', 'opcode': opcode, 'fields': [text(x) for x in fields], 'wire_hex': packet.hex()})+'\n')
         WIRE.flush()
         self.sock.sendall(packet)
 
@@ -84,7 +82,7 @@ class Client:
                 return
 
     def reject_wrong_password(self):
-        self.send(71, [ACCOUNT, b'wrong-fixture-password'], login=True)
+        self.send(71, [ACCOUNT, WRONG_PASSWORD], login=True)
         p = self.wait(72)
         assert p.fields[0] == b'no', p.fields
         record('wrong_password_rejected', result=text(p.fields[0]))
@@ -121,9 +119,10 @@ class Client:
         self.send(45, [b'P'])
         p = self.wait(46, lambda p: p.fields[0].startswith(b'P1|'))
         fields = p.fields[0].split(b'|')
-        # The legacy packet includes an undefined extra integer at field28;
-        # validate documented fields only, and flag this in the test report.
-        assert NAME in fields
+        assert len(fields) == 32 and fields[-1] == b'', 'P1 field count changed'
+        assert all(re.fullmatch(rb'-?\d+', field) for field in fields[1:29])
+        assert fields[28] == b'0', 'P1 reserved slot must be deterministic'
+        assert fields[29] == NAME, 'P1 name position changed'
         return {name: int(fields[index]) for name, index in
                 (('vi',5), ('str',6), ('tou',7), ('dx',8), ('lv',11), ('gld',21), ('bi',27))}
 
@@ -232,7 +231,7 @@ def run():
     logout_save = wait_saved(start)
     record('explicit_logout_save_verified', reply=[text(x) for x in logout.fields], saved_position={k:logout_save['values'][k] for k in ('fl','x','y')})
     reconnect.close()
-    return {'status': 'passed', 'events': EVENTS, 'scope': 'login-create-map-move-autosave-disconnect-reconnect-explicit-logout', 'fixture_account': text(ACCOUNT), 'known_limitations': ['Legacy P1 status contains an undefined extra integer (28 format placeholders, 27 arguments); only documented fields are asserted.', 'Live-service reconnect only; process restart, crash durability, complete map correctness, battle and production security are not tested.']}
+    return {'status': 'passed', 'events': EVENTS, 'scope': 'login-create-map-move-autosave-disconnect-reconnect-explicit-logout', 'fixture_account': text(ACCOUNT), 'known_limitations': ['P1 numeric slot 28 is reserved zero; its historical meaning is unverified.', 'Live-service reconnect only; process restart, crash durability, complete map correctness, battle and production security are not tested.']}
 
 
 if __name__ == '__main__':

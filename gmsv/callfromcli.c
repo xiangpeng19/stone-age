@@ -82,7 +82,7 @@ void lssproto_ClientLogin_recv( int fd,char* cdkey, char* passwd )
     c=(tmpip % 0x100); tmpip=tmpip / 0x100;
     d=(tmpip % 0x100);
     sprintf(ip,"%d.%d.%d.%d",a,b,c,d);
-    print( "\nµÇÂ½ÕËºÅ=%s ÃÜÂë=%s À´×Ô=%s\n",cdkey,passwd,ip);
+    print("\nClient login fd=%d password=[redacted]\n", fd);
     
     /* ß¯²Ï */
     saacproto_ACCharLogin_send( acfd, fd, cdkey, passwd, ip);

@@ -2066,7 +2066,9 @@ char* CHAR_makeStatusString( int index, char* category )
 				 CHAR_getInt( index, CHAR_TRANSMIGRATION),
 				 CHAR_getInt(index,CHAR_RIDEPET),
 				 CHAR_getInt(index,CHAR_LEARNRIDE),
-				 CHAR_getInt(index,CHAR_BASEBASEIMAGENUMBER)
+				 CHAR_getInt(index,CHAR_BASEBASEIMAGENUMBER),
+                /* Preserve numeric slot 28; its historical meaning is unverified. */
+                0
 				);
 		strlength = strlen( CHAR_statusSendBuffer );
 		for( i = 0 ; i < arraysizeof( getCharDataArray ) ; i ++ ){

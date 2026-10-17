@@ -188,7 +188,7 @@ BOOL sasql_register(char *id, char *ps)
 		"INSERT INTO %s (%s,%s,RegTime,Path) VALUES (BINARY'%s','%s',NOW(),'char/0x%x')",
 		config.sql_Table, config.sql_NAME, config.sql_PASS, id, ps,
 		getHash(id) & 0xff);
-	printf("\nregister_sql=%s\n", sqlstr);
+	printf("\nregister_sql=[redacted]\n");
 	if (!mysql_query(&mysql, sqlstr)) {
 		printf("\nnew_user_register=ok 新用户注册成功！\n");
 		return TRUE;

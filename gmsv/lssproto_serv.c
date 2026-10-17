@@ -984,8 +984,13 @@ int lssproto_ServerDispatchMessage(int fd, char *encoded)
 		
 		strcpy(PersonalKey, _DEFAULT_PKEY);
 
-		checksum += util_destring(2, cdkey);
-		checksum += util_destring(3, passwd);
+        int account_length = util_destring_bounded(2, cdkey, sizeof(cdkey));
+        int password_length = util_destring_bounded(3, passwd, sizeof(passwd));
+        if (account_length <= 0 || password_length <= 0) {
+            util_DiscardMessage();
+            return -1;
+        }
+        checksum += account_length + password_length;
 		
 		util_deint(4, &checksumrecv);
 		if (checksum!=checksumrecv) {
@@ -995,7 +1000,7 @@ int lssproto_ServerDispatchMessage(int fd, char *encoded)
 			DME(); return -1;
 		}
 #ifdef _DEBUG_RET_CLI
-		printf("[接收]LSSPROTO_CLIENTLOGIN_RECV-cdkey:%s,passwd:%s\n", cdkey, passwd);
+        printf("LSSPROTO_CLIENTLOGIN_RECV password=[redacted]\n");
 #endif
 		lssproto_ClientLogin_recv(fd, cdkey, passwd);
 		util_DiscardMessage();
@@ -1187,7 +1192,7 @@ int lssproto_ServerDispatchMessage(int fd, char *encoded)
 			DME(); return -1;
 		}
 #ifdef _DEBUG_RET_CLI
-		printf("[接收]LSSPROTO_SHUTDOWN_RECV-passwd:%s,min:%d\n", passwd,min);
+        printf("LSSPROTO_SHUTDOWN_RECV password=[redacted] min:%d\n", min);
 #endif
 		lssproto_Shutdown_recv(fd, passwd, min);
 		util_DiscardMessage();

@@ -27,7 +27,7 @@ class NativeCodecTests(unittest.TestCase):
             "util_64to256", "util_256to64_shr", "util_shl_64to256",
             "util_256to64_shl", "util_shr_64to256", "util_swapint",
             "util_xorstring", "util_shrstring", "util_shlstring",
-            "util_deint", "util_mkint", "util_destring", "util_mkstring",
+            "util_deint", "util_mkint", "util_destring", "util_destring_bounded", "util_mkstring",
         ]
         chunks = []
         for name in names:
@@ -49,6 +49,7 @@ class NativeCodecTests(unittest.TestCase):
 #define DEFAULTTABLE "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz{}"
 #define _DEFAULT_PKEY "BASELINE"
 #define SLICE_SIZE 65500
+#define SLICE_MAX 20
 char PersonalKey[4096];
 char *MesgSlice[20];
 '''
@@ -99,6 +100,24 @@ char *MesgSlice[20];
                 decoded = ctypes.create_string_buffer(8192)
                 self.c.util_destring(0, decoded)
                 self.assertEqual(decoded.value, value)
+
+    def test_bounded_login_strings(self):
+        class Guarded(ctypes.Structure):
+            _fields_ = [("value", ctypes.c_char * 16), ("guard", ctypes.c_char * 8)]
+        self.key.value = b"BASELINE"
+        for length in (0, 1, 14, 15, 16, 22, 1024):
+            plain = b"x" * length
+            self.slices[0] = protocol.encode_string(plain)
+            guarded = Guarded()
+            guarded.guard = b"CANARY!"
+            decoded = self.c.util_destring_bounded(0, ctypes.byref(guarded), 16)
+            self.assertEqual(guarded.guard, b"CANARY!")
+            if length <= 15:
+                self.assertEqual(decoded, length)
+                self.assertEqual(guarded.value, plain)
+            else:
+                self.assertEqual(decoded, -1)
+                self.assertEqual(guarded.value, b"")
 
     def test_outer_packets(self):
         raw = b"&;79;10I4BC;#;"

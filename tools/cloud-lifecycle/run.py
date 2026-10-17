@@ -12,6 +12,8 @@ import struct
 import subprocess
 import sys
 
+from fixtures import ACCOUNT, PASSWORD
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 
@@ -70,7 +72,7 @@ def main():
     lines = [line for line in lines if not line.startswith('CharSaveinterval=')]
     config.write_text('\n'.join(lines)+'\nCharSaveinterval=1\n')
     schema = (ROOT/'tools/cloud-baseline/schema.sql').read_text()
-    schema += "\n-- Public disposable fixture, never a real account.\nINSERT INTO sa.user_table (Name,Pass,Path) VALUES ('life_fixture','fixture-password','');\n"
+    schema += f"\n-- Public disposable fixture, never a real account.\nINSERT INTO sa.user_table (Name,Pass,Path) VALUES ('{ACCOUNT.decode('ascii')}','{PASSWORD.decode('ascii')}','');\n"
     (args.output/'schema.sql').write_text(schema)
     command = ['timeout', '--signal=TERM', '--kill-after=10s', '150s', 'unshare', '-Urn', sys.executable, str(HERE/'run.py'), '--inside', '--deps', str(args.deps), '--output', str(args.output), '--parent-net', os.readlink('/proc/self/ns/net')]
     try:
