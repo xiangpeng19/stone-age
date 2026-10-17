@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>石器 · 测试营地</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="测试营地首页"><span class="brand-mark">石</span><span>STONE AGE <small>测试营地</small></span></a>
+    <div class="header-right"><span class="scope-tag">基础流程演示</span><span id="connection" class="connection"><i></i>未连接</span></div>
+  </header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">A SMALL WINDOW INTO THE STONE AGE</p><h1>从一小步，回到石器时代。</h1><p class="intro-copy">一张真实地图，一个测试角色。画面使用占位图形，移动和存档由原服务端确认。</p></div><span class="version">INTERNAL DEMO / 01</span></section>
+    <div class="workspace">
+      <aside>
+        <section class="card character-card">
+          <p class="section-label">你的测试角色</p>
+          <div class="character-heading"><div class="avatar" aria-hidden="true"><span></span></div><div><h2>LifeFixture</h2><p>公开、一次性测试数据</p></div></div>
+          <dl class="stats"><div><dt>等级</dt><dd id="level">—</dd></div><div><dt>金币</dt><dd id="gold">—</dd></div></dl>
+          <button id="enter" class="button primary">进入演示 <span>↗</span></button>
+          <p class="hint">首次进入会自动创建测试角色。再次进入会选择已有角色，不会重复建角。</p>
+        </section>
+        <section class="card controls-card">
+          <div class="section-row"><p class="section-label">走一走</p><span class="small-chip">W A S D / 方向键</span></div>
+          <div class="dpad" aria-label="移动控制">
+            <button class="direction north" data-direction="north" aria-label="向北移动" disabled>↑</button>
+            <button class="direction west" data-direction="west" aria-label="向西移动" disabled>←</button>
+            <span class="dpad-center" aria-hidden="true">✦</span>
+            <button class="direction east" data-direction="east" aria-label="向东移动" disabled>→</button>
+            <button class="direction south" data-direction="south" aria-label="向南移动" disabled>↓</button>
+          </div>
+          <div class="position-box"><span>服务器坐标</span><strong id="coordinates">尚未进入地图</strong></div>
+          <button id="save" class="button secondary" disabled>确认自动存档</button>
+          <p id="save-status" class="save-status">进入后可确认当前位置已写入存档。</p>
+          <div class="exit-actions"><button id="disconnect" disabled>断开连接</button><button id="logout" disabled>正常退出</button></div>
+          <p class="hint">断线重连恢复保存位置；正常退出会按原游戏规则回到出生点。</p>
+        </section>
+      </aside>
+      <section class="map-card card" aria-label="地图与测试角色">
+        <div class="map-heading"><div><p class="section-label">探索中的地图</p><h2 id="map-name">等待进入营地</h2></div><span id="map-id" class="map-id">MAP —</span></div>
+        <div class="canvas-wrap" tabindex="0" aria-label="地图区域，可使用方向键移动">
+          <canvas id="map" width="480" height="640" aria-label="服务器地图和角色位置"></canvas>
+          <div id="welcome" class="welcome"><span class="welcome-symbol">✦</span><h3>营地已就绪</h3><p>点击「进入演示」连接测试角色。<br>此页面仅供基础流程验证。</p></div>
+          <div id="busy" class="map-busy" hidden><span class="spinner"></span><span id="busy-label">正在连接服务端…</span></div>
+        </div>
+        <div class="map-footer"><div class="legend"><span><i class="legend-player"></i>测试角色</span><span><i class="legend-object"></i>地图物件</span><span><i class="legend-event"></i>事件点</span></div><span id="authority">等待服务端数据</span></div>
+      </section>
+      <section class="activity card"><div class="section-row"><p class="section-label">营地动态</p><span id="notice" role="status" aria-live="polite">准备就绪</span></div><ol id="events"><li>页面不接收真实账号或密码，仅使用固定测试身份。</li></ol></section>
+    </div>
+    <footer class="page-footer"><span>占位图形 · 无外部素材 · 单人控制会话</span><span>当前范围：登录 / 地图 / 移动 / 存档</span></footer>
+  </main>
+</body>
+</html>
