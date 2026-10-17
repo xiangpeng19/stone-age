@@ -157,56 +157,8 @@ void sighandle( int a )
 // Arminius 7.20 memory unlock
 void sigusr1(int a)
 {
-  int i;
-  FILE *f;
-  char key[4096],buf[4096];
-
-  signal(SIGUSR1, sigusr1);
-  
-  f = fopen("./unlock.arg", "r");
-
-  if (f) {
-    memset(key, 0, 4096);
-    fread(key, 4096, 1, f);
-    for (i=0; i<strlen(key); i++) if (key[i]=='\n') key[i]='\0';
-
-    switch (key[0]) {
-    case 'P':	// unlock player
-      if (DeleteMemLock(getHash(&key[1]) & 0xff,&key[1],&i)) {
-        log("ADM: memunlock: %s success.\n", key);
-      } else {
-        log("ADM: memunlock: %s failed.\n", key);
-      }
-    break;
-    case 'S':	// unlock server
-      DeleteMemLockServer(&key[1]);
-      log("ADM: memunlock: %s\n", key);
-    break;
-    case 'C':	// check player lock
-      GetMemLockState(getHash(&key[1]) & 0xff, &key[1], buf);
-      sprintf(key, "echo \"%s\" > ./sigusr1.result", buf);
-      system(key);
-    break;
-#ifdef _SEND_EFFECT		   // WON ADD 送下雪、下雨等特效
-	case 'E':	
-		log("\nAC 向 GS 发送下雪特效!!\n");
-	    SendEffect(&key[1]);
-	break;
-#endif
-
-	case 'L':  // Robin 列出所有Server连线
-		log("\nList All Server Conncet!!!!!\n");
-		for( i =0; i <MAXCONNECTION; i++)
-			if( gs[i].use)
-				log("\n gs[%d] fd:%d name:%s ", i, gs[i].fd, gs[i].name );
-	break;
-
-  }
-	log(" sigusr1_over_1 ");
-	fclose(f);
-	log(" sigusr1_over_2 ");
-
-  }
+    /* Disabled for isolated validation; no administrative file or shell action. */
+    (void)a;
 }
 
 static int netWrite( int ti , char *buf , int len)
@@ -225,13 +177,7 @@ int login_game_server( int ti , char *svname , char *svpas ,
                char *retdata , int retdatalen )
 #endif
 {
-#ifndef _VIP
-		char buff[50];
-		sprintf(buff,"longzoro-%s-%d",svpass,123);
-    if( strcmp( svpas , buff ) == 0 ){
-#else
-		if( strcmp( svpas , svpass ) == 0 ){
-#endif
+    if (strcmp(svpas, svpass) == 0) {
         log( "服务器密码正确 %s\n" , svname );
     } else {
         log( "服务器密码错误 %s\n" , svname );
@@ -239,14 +185,6 @@ int login_game_server( int ti , char *svname , char *svpas ,
         snprintf( retdata , retdatalen , "密码错误" );
         return 0;
     }
-#ifdef _VIP
-    if(0)//checkvip==0 || checkvip!=123456 * 2)
-    {
-    	snprintf( result , resultlen , "failed" );
-      snprintf( retdata , retdatalen , "duplicate login" );
-      return 0;
-    }
-#endif
     {
         int i;
         for(i=0;i<MAXCONNECTION;i++){
@@ -311,7 +249,7 @@ static int readConfig( char *path )
 #endif
         } else if( strcmp( command , "pass" ) == 0 ){
         		snprintf( svpass , sizeof( svpass ) , param);
-            log( "密码:%s\n",param );
+            log( "密码:[redacted]\n" );
         } else if( strcmp( command , "dbdir" ) == 0 ){
             snprintf( dbdir , sizeof( dbdir) , param );    
             log( "数据目录:%s\n",dbdir );        
@@ -438,7 +376,7 @@ int main( int argc , char **argv )
     }
 
 #ifdef _SASQL
-    sasql_init();
+    if (!sasql_init()) return 1;
 #endif	
     log( "读取数据目录\n" );
     dbRead( dbdir );
@@ -471,7 +409,7 @@ int main( int argc , char **argv )
     /* TCPSTRUCT 毛赓渝祭 */
     {
         int tcpr;
-        if( ( tcpr = tcpstruct_init( NULL , port , 0 ,
+        if( ( tcpr = tcpstruct_init( "127.0.0.1" , port , 0 ,
 						CHARDATASIZE * 16 * MAXCONNECTION , 1 /* DEBUG */ ) ) < 0 ){
             log( "不能开启TCP: %d\n", tcpr );
             return 1;

@@ -202,7 +202,7 @@ BOOL init(int argc , char** argv , char** env )
         print("账号服务器端口: %d\n", getAccountserverport() );
         print("登陆服务器名称: %s\n",
               getGameservername());
-        print("登陆服务器密码: %s\n", getAccountserverpasswd());
+        print("登陆服务器密码: [redacted]\n");
 
         print("等待连接端口: %d\n", getPortnumber() );
 
@@ -247,7 +247,7 @@ BOOL init(int argc , char** argv , char** env )
         print("NPC 配置目录: %s\n", getNpcdir());
         print("日志记载文件: %s\n",  getLogdir());
         print("日志配置文件: %s\n", getLogconffile() );
-        print("GM的指命密码: %s\n", getChatMagicPasswd() );
+        print("GM的指命密码: [redacted]\n");
         print("使用GM的权限: %d\n", getChatMagicCDKeyCheck() );
 
         print("NPC 模板数目: %d\n", getNpctemplatenum() );
@@ -652,9 +652,7 @@ BOOL init(int argc , char** argv , char** env )
 #ifdef _VIP_ALL
     	saacproto_ACServerLogin_send(acfd, getGameservername(), getAccountserverpasswd(), getCheckVip()*2);
 #else
-			char buff[50];
-			sprintf(buff,"longzoro-%s-%d",getAccountserverpasswd(),123);
-			saacproto_ACServerLogin_send(acfd, getGameservername(), buff);
+        saacproto_ACServerLogin_send(acfd, getGameservername(), getAccountserverpasswd());
 #endif
     }
 	print( "完成\n" );

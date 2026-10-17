@@ -1,0 +1,9 @@
+Linux x86_64 (disposable cloud validation environment)
+gcc (Debian 14.2.0-19) 14.2.0
+GNU Make 4.4.1
+0c58fb6683a49a178a8ad845a8c296c2cb83bd81
+490c8a2d116001a5f3b0a6d7a7aabf6a7b629366590dc5c3f75b078e931dd129  deps/libaio.deb
+f980a7ab01598d5129256c55cf24479153f8bd2274a9fa96c3bcfb8d2d57e852  deps/libmariadb-dev.deb
+b2a2d1cdf7493c75d43916a18947700740964513ff5ff603cf5cbbf61e9e6385  deps/libmariadb3.deb
+4b589c00c7a51172aace2cb2fb3d3ff32daf86c644023126dcfcaa840cc941ea  deps/liburing.deb
+07a333e34773e1e1bc7c5613878c70a1224180f452481dcf786be05711148178  deps/server-core.deb

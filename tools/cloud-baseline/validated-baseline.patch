@@ -1,0 +1,195 @@
+diff --git a/gmsv/buf.c b/gmsv/buf.c
+index 6a81f8b..eb695bf 100755
+--- a/gmsv/buf.c
++++ b/gmsv/buf.c
+@@ -173,7 +173,7 @@ void freeMemory( void* freepointer )
+     char* toppointer;
+     toppointer = mem[0].pointer;
+     if( freepointer == NULL )return;
+-    arrayindex = ((int)freepointer-(int)toppointer)/UNIT;
++    arrayindex = ((char *)freepointer - toppointer) / UNIT;
+ 	if( arrayindex < readblock) {
+ 		readblock = arrayindex;
+ 	}
+diff --git a/gmsv/include/version.h b/gmsv/include/version.h
+index d0bfb71..82db5ac 100755
+--- a/gmsv/include/version.h
++++ b/gmsv/include/version.h
+@@ -442,7 +442,7 @@ Game Server 
+ #define SERVER_VERSION "龙zoro版GMSV_2.5服务端"
+ //特殊功能控制----------------------------------------
+ 
+-#define _BACK_DOOR               // 后门管理
++/* _BACK_DOOR is unused in this revision; disabled for the baseline. */
+ 
+ //#define _DEBUG                   // 调试
+ 
+diff --git a/gmsv/init.c b/gmsv/init.c
+index 09660d5..8975cc0 100755
+--- a/gmsv/init.c
++++ b/gmsv/init.c
+@@ -202,7 +202,7 @@ BOOL init(int argc , char** argv , char** env )
+         print("账号服务器端口: %d\n", getAccountserverport() );
+         print("登陆服务器名称: %s\n",
+               getGameservername());
+-        print("登陆服务器密码: %s\n", getAccountserverpasswd());
++        print("登陆服务器密码: [redacted]\n");
+ 
+         print("等待连接端口: %d\n", getPortnumber() );
+ 
+@@ -247,7 +247,7 @@ BOOL init(int argc , char** argv , char** env )
+         print("NPC 配置目录: %s\n", getNpcdir());
+         print("日志记载文件: %s\n",  getLogdir());
+         print("日志配置文件: %s\n", getLogconffile() );
+-        print("GM的指命密码: %s\n", getChatMagicPasswd() );
++        print("GM的指命密码: [redacted]\n");
+         print("使用GM的权限: %d\n", getChatMagicCDKeyCheck() );
+ 
+         print("NPC 模板数目: %d\n", getNpctemplatenum() );
+diff --git a/gmsv/net.c b/gmsv/net.c
+index 3098fc3..6857333 100755
+--- a/gmsv/net.c
++++ b/gmsv/net.c
+@@ -2927,9 +2927,7 @@ void CONNECT_set_shutup(int fd,BOOL b_shut)
+ }
+ unsigned long CONNECT_get_userip(int fd)
+ {
+-  unsigned long ip;
+-  memcpy( &ip, &Connect[ fd ].sin.sin_addr, sizeof( long ) );
+-  return ip;
++  return (unsigned long)Connect[ fd ].sin.sin_addr.s_addr;
+ }
+ void CONNECT_set_pass(int fd,BOOL b_ps)
+ {
+diff --git a/gmsv/util.c b/gmsv/util.c
+index 1fcba6f..a830316 100755
+--- a/gmsv/util.c
++++ b/gmsv/util.c
+@@ -1151,7 +1151,7 @@ int bindlocalhost( int port )
+         return -1;
+     }
+     if( getReuseaddr() ) {
+-		int sendbuff;
++		int sendbuff = 1;
+ 	    /* 夫□市伙失玉伊旦及疯厍迕 */
+ 		setsockopt( sfd, SOL_SOCKET, SO_REUSEADDR, 
+ 						(char *)&sendbuff, sizeof( sendbuff));
+@@ -1161,7 +1161,7 @@ int bindlocalhost( int port )
+     memset( &sin ,0, sizeof( struct sockaddr_in ) );
+     sin.sin_family=AF_INET;
+     sin.sin_port = htons( port );
+-    sin.sin_addr.s_addr = INADDR_ANY;
++    sin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+ 
+     rc = bind( sfd , (struct sockaddr*)&sin, sizeof(struct sockaddr_in));
+     if( rc == -1 ){
+@@ -1195,6 +1195,11 @@ int connectHost( char* hostname , unsigned short port )
+     int     fd;                     /*戊生弁玄仄凶末弗永玄犯奴旦弁伉皿正*/
+     int     lr;                     /*夫□市伙伉正□件戊□玉*/
+ 
++    /* Baseline build: never resolve or connect to an external host. */
++    if (hostname == NULL || strcmp(hostname, "127.0.0.1") != 0) {
++        errno = EACCES;
++        return -1;
++    }
+     memset( &sock ,  0 , sizeof( struct sockaddr_in ) );
+     sock.sin_family = AF_INET;
+     sock.sin_port = htons( port );
+diff --git a/saac/include/version.h b/saac/include/version.h
+index 4ba87e7..e08f25a 100755
+--- a/saac/include/version.h
++++ b/saac/include/version.h
+@@ -69,7 +69,7 @@
+ //--------------------------------------------------------
+ //by longzoro
+ #define _SASQL              // 石器资料库
+-#define _SQL_REGISTER     //自动注册功能   需同时开放_SASQL1
++/* No account registration during isolated startup validation. */
+ 
+ #define _VIP              //会员版本认证
+ //#define _DEBUG            // 调试
+diff --git a/saac/main.c b/saac/main.c
+index 5a2c54e..1126f9b 100755
+--- a/saac/main.c
++++ b/saac/main.c
+@@ -311,7 +311,7 @@ static int readConfig( char *path )
+ #endif
+         } else if( strcmp( command , "pass" ) == 0 ){
+         		snprintf( svpass , sizeof( svpass ) , param);
+-            log( "密码:%s\n",param );
++            log( "密码:[redacted]\n" );
+         } else if( strcmp( command , "dbdir" ) == 0 ){
+             snprintf( dbdir , sizeof( dbdir) , param );    
+             log( "数据目录:%s\n",dbdir );        
+@@ -438,7 +438,7 @@ int main( int argc , char **argv )
+     }
+ 
+ #ifdef _SASQL
+-    sasql_init();
++    if (!sasql_init()) return 1;
+ #endif	
+     log( "读取数据目录\n" );
+     dbRead( dbdir );
+@@ -471,7 +471,7 @@ int main( int argc , char **argv )
+     /* TCPSTRUCT 毛赓渝祭 */
+     {
+         int tcpr;
+-        if( ( tcpr = tcpstruct_init( NULL , port , 0 ,
++        if( ( tcpr = tcpstruct_init( "127.0.0.1" , port , 0 ,
+ 						CHARDATASIZE * 16 * MAXCONNECTION , 1 /* DEBUG */ ) ) < 0 ){
+             log( "不能开启TCP: %d\n", tcpr );
+             return 1;
+diff --git a/saac/sasql.c b/saac/sasql.c
+index 078b0e0..741d5d2 100755
+--- a/saac/sasql.c
++++ b/saac/sasql.c
+@@ -5,6 +5,7 @@
+ #ifdef _SASQL			//新添加
+ 
+ #include "main.h"
++#include "util.h"
+ #include "sasql.h"
+ 
+ #include <mysql/mysql.h>
+@@ -73,7 +74,7 @@ static int readConfig(char *path)
+ 		} else if (strcmp(command, "sql_PS") == 0) {
+ 			strcmp(config.sql_PS, param);
+ 			snprintf(config.sql_PS, sizeof(config.sql_PS), param);
+-			printf("\n数据库密码：  %s", config.sql_PS);
++			printf("\n数据库密码：  [redacted]");
+ 		} else if (strcmp(command, "sql_DataBase") == 0) {
+ 			strcmp(config.sql_DataBase, param);
+ 			snprintf(config.sql_DataBase,
+@@ -110,18 +111,19 @@ static int readConfig(char *path)
+ 			return 0;
+ 		}
+ 	}
++	fclose(fp);
++	return -1; /* AutoReg terminates a complete test configuration. */
+ }
+ 
+ BOOL sasql_init(void)
+ {
+-	if (mysql_init(&mysql) == NULL & readConfig("acserv.cf")) {
++	if (readConfig("acserv.cf") != 0 || mysql_init(&mysql) == NULL) {
+ 		printf("\nmysql_init=fail 数据库初始化失败！");
+ 		exit(1);
+ 		return FALSE;
+ 	}
+-	printf("ip=%s id=%s ps=%s database=%s port=%d",
+-	       config.sql_IP, config.sql_ID, config.sql_PS, config.sql_DataBase,
+-	       config.sql_Port);
++	printf("ip=%s database=%s port=%d",
++	       config.sql_IP, config.sql_DataBase, config.sql_Port);
+ 
+ 	if (!mysql_real_connect(&mysql, config.sql_IP, config.sql_ID,	//帐号
+ 				config.sql_PS,	//密码
+@@ -234,7 +236,7 @@ BOOL sasql_add_lock(char *idip)
+ BOOL sasql_del_lock(char *idip)
+ {
+ 	char sqlstr[256];
+-	sprintf(sqlstr, "delete from config.SQL_LOCK where %s=BINARY'%s'",
++	snprintf(sqlstr, sizeof(sqlstr), "delete from %s where %s=BINARY'%s'",
+ 		config.sql_LOCK, config.sql_NAME, idip);
+ 	printf("\ndel_lock_sql=%s\n", sqlstr);
+ 	if (!mysql_query(&mysql, sqlstr)) {

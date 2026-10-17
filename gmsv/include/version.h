@@ -8,10 +8,6 @@
 
 #define UNIQUE_KEYCODEITEM	100
 #define UNIQUE_KEYCODEPET	"i"
-//#define _DEFAULT_PKEY "Wonwonwon"	// (可开放)( 石器 6.0 )
-//#define _RUNNING_KEY  "11111111"  // (可开放)( 石器 6.0 )
-//#define _DEFAULT_PKEY "ttttttttt"   // (可开放)( 石器 6.0 )
-//#define _RUNNING_KEY  "20041215"    // (可开放)( 石器 6.0 )
 
 /* -------------------------------------------------------------------
  * 专案：家族庄园数量修改	人员：小瑜、彦勋、志伟、小民
@@ -436,13 +432,13 @@ Game Server 游戏环境:
 #define _GET_MULTI_ITEM          // 一次给多件物品
 #endif
 //私服版本控制----------------------------------------
-#define _DEFAULT_PKEY "cary"   // ( 石器 2.5 )
-#define _RUNNING_KEY  "cary"   // ( 石器 2.5 )
+#define _DEFAULT_PKEY "BASELINE" /* Public test-only protocol marker. */
+#define _RUNNING_KEY "BASELINE" /* Public test-only protocol marker. */
 #define _SA_VERSION 'L'
 #define SERVER_VERSION "龙zoro版GMSV_2.5服务端"
 //特殊功能控制----------------------------------------
 
-#define _BACK_DOOR               // 后门管理
+/* _BACK_DOOR is unused in this revision; disabled for the baseline. */
 
 //#define _DEBUG                   // 调试
 

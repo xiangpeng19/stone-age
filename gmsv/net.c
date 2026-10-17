@@ -2164,7 +2164,7 @@ SINGLETHREAD BOOL netloop_faster( void )
             print( "NO" );
           }
         }
-      }else if (strcmp(Connect[ sockfd ].cdkey, "longzoro")!=0 || strcmp(Connect[ sockfd ].cdkey, "zengweimin")!=0) {
+      }else {
         // Nuke +2 Errormessage	            
         char mess[64]="E伺服器人数已满，请稍候再试。";
         if (!from_acsv) 
@@ -2927,9 +2927,7 @@ void CONNECT_set_shutup(int fd,BOOL b_shut)
 }
 unsigned long CONNECT_get_userip(int fd)
 {
-  unsigned long ip;
-  memcpy( &ip, &Connect[ fd ].sin.sin_addr, sizeof( long ) );
-  return ip;
+  return (unsigned long)Connect[ fd ].sin.sin_addr.s_addr;
 }
 void CONNECT_set_pass(int fd,BOOL b_ps)
 {

@@ -5,6 +5,7 @@
 #ifdef _SASQL			//新添加
 
 #include "main.h"
+#include "util.h"
 #include "sasql.h"
 
 #include <mysql/mysql.h>
@@ -73,7 +74,7 @@ static int readConfig(char *path)
 		} else if (strcmp(command, "sql_PS") == 0) {
 			strcmp(config.sql_PS, param);
 			snprintf(config.sql_PS, sizeof(config.sql_PS), param);
-			printf("\n数据库密码：  %s", config.sql_PS);
+			printf("\n数据库密码：  [redacted]");
 		} else if (strcmp(command, "sql_DataBase") == 0) {
 			strcmp(config.sql_DataBase, param);
 			snprintf(config.sql_DataBase,
@@ -110,18 +111,19 @@ static int readConfig(char *path)
 			return 0;
 		}
 	}
+	fclose(fp);
+	return -1; /* AutoReg terminates a complete test configuration. */
 }
 
 BOOL sasql_init(void)
 {
-	if (mysql_init(&mysql) == NULL & readConfig("acserv.cf")) {
+	if (readConfig("acserv.cf") != 0 || mysql_init(&mysql) == NULL) {
 		printf("\nmysql_init=fail 数据库初始化失败！");
 		exit(1);
 		return FALSE;
 	}
-	printf("ip=%s id=%s ps=%s database=%s port=%d",
-	       config.sql_IP, config.sql_ID, config.sql_PS, config.sql_DataBase,
-	       config.sql_Port);
+	printf("ip=%s database=%s port=%d",
+	       config.sql_IP, config.sql_DataBase, config.sql_Port);
 
 	if (!mysql_real_connect(&mysql, config.sql_IP, config.sql_ID,	//帐号
 				config.sql_PS,	//密码
@@ -234,7 +236,7 @@ BOOL sasql_add_lock(char *idip)
 BOOL sasql_del_lock(char *idip)
 {
 	char sqlstr[256];
-	sprintf(sqlstr, "delete from config.SQL_LOCK where %s=BINARY'%s'",
+	snprintf(sqlstr, sizeof(sqlstr), "delete from %s where %s=BINARY'%s'",
 		config.sql_LOCK, config.sql_NAME, idip);
 	printf("\ndel_lock_sql=%s\n", sqlstr);
 	if (!mysql_query(&mysql, sqlstr)) {

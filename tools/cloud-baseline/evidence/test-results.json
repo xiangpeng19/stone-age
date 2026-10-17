@@ -1,0 +1,30 @@
+{
+  "scope": "compile and isolated startup/handshake only",
+  "checks": {
+    "saac_event_loop": true,
+    "gmsv_account_handshake": true,
+    "processes_survived": true,
+    "only_expected_loopback_listeners": true,
+    "no_external_interface": true,
+    "no_route": true
+  },
+  "passed": true,
+  "not_tested": [
+    "game client login",
+    "character creation",
+    "battle",
+    "trade",
+    "save reload",
+    "concurrency",
+    "long duration stability",
+    "full security"
+  ],
+  "warning_count": {
+    "saac-build-1.log": 103,
+    "gmsv-build-2.log": 2563
+  },
+  "completed_at": "2026-10-17T05:48:02Z",
+  "source_base": "0c58fb6683a49a178a8ad845a8c296c2cb83bd81",
+  "fresh_checkout": true,
+  "sanitized_test_inputs": true
+}

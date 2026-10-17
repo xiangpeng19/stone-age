@@ -1151,7 +1151,7 @@ int bindlocalhost( int port )
         return -1;
     }
     if( getReuseaddr() ) {
-		int sendbuff;
+		int sendbuff = 1;
 	    /* ·ò¡õÊĞ»ïÊ§ÓñÒÁµ©¼°·èØÇåÃ */
 		setsockopt( sfd, SOL_SOCKET, SO_REUSEADDR, 
 						(char *)&sendbuff, sizeof( sendbuff));
@@ -1161,7 +1161,7 @@ int bindlocalhost( int port )
     memset( &sin ,0, sizeof( struct sockaddr_in ) );
     sin.sin_family=AF_INET;
     sin.sin_port = htons( port );
-    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 
     rc = bind( sfd , (struct sockaddr*)&sin, sizeof(struct sockaddr_in));
     if( rc == -1 ){
@@ -1195,6 +1195,11 @@ int connectHost( char* hostname , unsigned short port )
     int     fd;                     /*ÎìÉúÛÍĞşØÆĞ×Ä©¸¥ÓÀĞş·¸Å«µ©ÛÍØøÃóÕı*/
     int     lr;                     /*·ò¡õÊĞ»ïØøÕı¡õ¼şÎì¡õÓñ*/
 
+    /* Baseline build: never resolve or connect to an external host. */
+    if (hostname == NULL || strcmp(hostname, "127.0.0.1") != 0) {
+        errno = EACCES;
+        return -1;
+    }
     memset( &sock ,  0 , sizeof( struct sockaddr_in ) );
     sock.sin_family = AF_INET;
     sock.sin_port = htons( port );
