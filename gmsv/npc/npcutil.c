@@ -1,5 +1,6 @@
 #include "version.h"
 #include <string.h>
+#include <limits.h>
 #include "common.h"
 #include "char.h"
 #include "char_base.h"
@@ -997,11 +998,13 @@ static char *NPC_Util_MargeStrFromArgFile(char *filename, char *buf, int len)
 	FILE *fp;
 	char *cret = NULL;
 	char line[NPC_UTIL_GETARGSTR_LINEMAX];
-	char opfile[32];
+	char opfile[PATH_MAX];
+	int path_length;
 
-	sprintf(opfile, "%s/", getNpcdir());
-	strcat(opfile, filename);
 	*buf = '\0';
+	path_length = snprintf(opfile, sizeof(opfile), "%s/%s", getNpcdir(), filename);
+	if (path_length < 0 || (size_t)path_length >= sizeof(opfile))
+		return NULL;
 	fp = fopen(opfile, "r");
 	if (fp != NULL) {
 		while (fgets(line, sizeof(line), fp)) {

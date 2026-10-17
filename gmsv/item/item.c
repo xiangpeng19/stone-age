@@ -1093,16 +1093,11 @@ BOOL ITEM_readItemConfFile( char* filename )
 		replaceString( line, '\t' , ' ' );
 		itemnum ++;
 {
-		char    buf[256];
-		for( i = 0; i < strlen( line); i ++) {
-			if( line[i] != ' ' ) {
-				break;
-			}
-			strcpy( buf, &line[i]);
-		}
-		if( i != 0 ) {
-			strcpy( line, buf);
-		}
+        /* Item records can exceed 256 bytes; trim without a temporary buffer. */
+        size_t leading = strspn(line, " ");
+        if (leading != 0) {
+            memmove(line, line + leading, strlen(line + leading) + 1);
+        }
 }
 {
 		char    token[256];
