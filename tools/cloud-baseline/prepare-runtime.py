@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Prepare empty fixtures only. This script does not start any service."""
 from pathlib import Path
+import argparse
 import re
 import shutil
 
 src = Path.cwd()
-run = src / "baseline-runtime"
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--output", type=Path, default=src / "baseline-runtime")
+args = parser.parse_args()
+run = args.output.resolve()
 if run.exists():
     raise SystemExit("Refusing to reuse an existing runtime directory")
 for name in (

@@ -1,0 +1,22 @@
+{
+  "source_revision": "31054a13c00c2694c9c03c7675b8a00d91446bb9",
+  "source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "compiler": "gcc (Debian 14.2.0-19) 14.2.0",
+  "executables": {
+    "saac/saacjt.exe": "04f18e6bf463cafa928f635b8d251b3afa845b955d0c6e37bb498824557c679b",
+    "gmsv/gmsvjt.exe": "51de0bd2ea2c9643e781607fe5995b7aab778c6e0c8a93e9ef361865557c4070"
+  },
+  "dependency_binaries": {
+    "usr/sbin/mariadbd": "bb4ed4f51f5dc0b739c3c9adceca2596800dcc5c1b0d4ee0be4421b8a5640099",
+    "usr/lib/x86_64-linux-gnu/libmariadb.so.3": "d283268434adf3cc3ffcb0580b384f3e13c91bd24b58114022073694dbcc2928"
+  },
+  "test_files": {
+    "build.sh": "39ec33212ee30b00618f66b6021f7d69a5568163698f9e8a4274ff298e4b68ce",
+    "inside.sh": "eb575d6bb2c164dcb237b8fa4b299839aa6698a5b145c83608cf2e912a0689a1",
+    "lifecycle.py": "baffe4c3d699a1bc26c60987c070bbc15e07acd55b65668b0faff9f1a53f195e",
+    "protocol.py": "65aa2f4dc26162b81ccc5ae9fddcedd7cc3a8b4dded45268c8b2f1894fbd0208",
+    "run.py": "575653afc2b68885dc0f213a2d1da3689b46fc358cc052388c1efb948868103c",
+    "test_protocol.py": "c2fac359fc66cb2771c9539daebe3275e1ac8f81baf4555cbaa2d6dbfeed7fa6"
+  },
+  "build_command": "DEPS_ROOT=<extracted packages> LOG_DIR=<build logs> bash tools/cloud-lifecycle/build.sh"
+}

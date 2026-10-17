@@ -1,0 +1,17 @@
+{"stage": "connected", "greeting_hex": "4c00"}
+{"stage": "wrong_password_rejected", "result": "no"}
+{"stage": "account_login", "result": "ok"}
+{"stage": "empty_character_list", "data": ""}
+{"stage": "character_created", "reply": ["successful", ""]}
+{"stage": "character_listed", "data": "LifeFixture|0\\z30000\\z1\\z0\\z0\\z0\\z0\\z0\\z100\\z0\\z0\\z0\\z0\\z0\\zLifeFixture\\z\u8428\u59c6\u5409\u5c14\u7684\u6751\u957f\u5bb6\\yz0"}
+{"stage": "map_entered", "floor": 1006, "x": 15, "y": 22, "width": 30, "height": 40}
+{"stage": "player_status_received", "vi": 3, "str": 4, "tou": 6, "dx": 7, "lv": 1, "gld": 1000000, "bi": 100000}
+{"stage": "map_data_received", "bounds": [1006, 14, 21, 17, 24], "payload_bytes": 85}
+{"stage": "movement_verified", "before": {"floor": 1006, "x": 15, "y": 22, "width": 30, "height": 40}, "after": {"floor": 1006, "x": 15, "y": 21, "width": 30, "height": 40}, "direction": "a"}
+{"stage": "autosave_verified_before_disconnect", "path": "saac/char/0x6/life_fixture.0.char", "sha256": "1f8402907aac09eb643c4090bfbcba264f90a2b6a64ca70e5241b305cd7e8533", "values": {"fl": 1006, "x": 15, "y": 21, "dir": 0, "lv": 1, "gld": 1000000, "vi": 300, "str": 400, "tou": 600, "dx": 700, "pn": 0, "bi": 100000, "fb": 30000}}
+{"stage": "connected", "greeting_hex": "4c00"}
+{"stage": "account_login", "result": "ok"}
+{"stage": "reconnect_persistence_verified", "position": {"floor": 1006, "x": 15, "y": 21, "width": 30, "height": 40}, "player_status": {"vi": 3, "str": 4, "tou": 6, "dx": 7, "lv": 1, "gld": 1000000, "bi": 100000}, "persisted_fields": {"fl": 1006, "x": 15, "y": 21, "dir": 0, "lv": 1, "gld": 1000000, "vi": 300, "str": 400, "tou": 600, "dx": 700, "pn": 0, "bi": 100000, "fb": 30000}}
+{"stage": "explicit_logout_save_verified", "reply": ["successful", "success"], "saved_position": {"fl": 1006, "x": 15, "y": 22}}
+LIFECYCLE_PASSED
+TEST_PROCESSES_STOPPED

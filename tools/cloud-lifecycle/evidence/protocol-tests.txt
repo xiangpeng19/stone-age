@@ -1,0 +1,11 @@
+test_integer_fields (__main__.NativeCodecTests.test_integer_fields) ... ok
+test_literal_goldens (__main__.NativeCodecTests.test_literal_goldens) ... ok
+test_outer_packets (__main__.NativeCodecTests.test_outer_packets) ... ok
+test_packet_schemas (__main__.NativeCodecTests.test_packet_schemas) ... ok
+test_string_fields (__main__.NativeCodecTests.test_string_fields) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.160s
+
+OK
+Protocol self-tests passed
